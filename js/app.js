@@ -42,7 +42,10 @@ function makeNavItem(navItem) {
   const li = document.createElement("li");
   const a = document.createElement("a");
   a.setAttribute("class", "menu__link");
-  a.setAttribute("href", `#${navItem.getAttribute("id")}`);
+  a.addEventListener("click", ()=> {
+    navItem.scrollIntoView()
+  });
+
   a.textContent = navItem.getAttribute("data-nav");
   li.appendChild(a);
   return li;
@@ -70,12 +73,14 @@ function makeSectionActive(sectionId) {
   const section = document.getElementById(sectionId);
 
   currentSection.classList.remove("active");
-  document
-    .querySelector(`a[href="#${currentSectionId}"]`)
-    .classList.remove("active");
+  const navElementToBeInactive = getElementByTextContent(currentSectionId);
+  navElementToBeInactive.classList.remove("active");
 
   section.classList.add("active");
-  document.querySelector(`a[href="#${sectionId}"]`).classList.add("active");
+
+  const navElementToBeAactive = getElementByTextContent(sectionId);
+  navElementToBeAactive.classList.add("active");
+  
   setCurrentSection(sectionId, section);
 }
 
@@ -101,6 +106,13 @@ function init() {
     setCurrentSection(allSections[0].id);
 
     makeSectionActive(currentSectionId);
+  }
+}
+
+function getElementByTextContent(text){
+  for (element of document.querySelectorAll("a")){
+    if (element.textContent.substr(-1) == text.substr(-1))
+      return element;
   }
 }
 
